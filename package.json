@@ -1,0 +1,6 @@
+{
+  "name": "solr-js-queryparser",
+  "version": "1.0.0",
+  "description": "JavaScriptable query parser plugin for solr",
+  "dependencies": {}
+}
