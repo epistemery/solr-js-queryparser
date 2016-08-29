@@ -37,7 +37,7 @@ public class JavaScriptedQParser extends QParser {
 
             JSObject parse = (JSObject)parser.getMember("parse");
             try {
-                Query query = (Query)parse.call(this);
+                Query query = (Query)parse.call(this.parser);
                 log.debug("javascript function parsed query to '" + query.toString() + "'");
 
                 return query;
