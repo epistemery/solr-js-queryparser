@@ -2,6 +2,7 @@ package org.epistemery.solr.plugins;
 
 import com.coveo.nashorn_modules.FilesystemFolder;
 import com.coveo.nashorn_modules.Require;
+import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.util.ResourceLoader;
@@ -15,7 +16,6 @@ import org.apache.solr.rest.ManagedResourceObserver;
 import org.apache.solr.search.QParser;
 import org.apache.solr.search.QParserPlugin;
 
-import javax.script.Invocable;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.File;
@@ -32,8 +32,8 @@ public class JavaScriptedQParserPlugin extends QParserPlugin implements Resource
     private boolean scriptReload = false;
     private boolean firstCall = true;
 
-    private NashornScriptEngine engine;
-    protected Invocable invocable;
+    protected NashornScriptEngine engine;
+    protected JSObject Parser;
 
     @Override
     public void init(NamedList args) {
@@ -98,7 +98,11 @@ public class JavaScriptedQParserPlugin extends QParserPlugin implements Resource
                 throw new FileNotFoundException(
                         "there's no script source. must define either scriptPath or modules && entrypoint");
             }
-            invocable = (Invocable) engine;
+
+            Parser = (JSObject) engine.get("Parser");
+            if(Parser == null) {
+                log.error("missing Parser class in parser script '" + scriptIdentifier + "'");
+            }
         } catch (ScriptException e) {
             log.error("parser script '" + scriptIdentifier + "' evaluation error", e);
         } catch (FileNotFoundException e) {
